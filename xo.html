@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XO Game</title>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            /*display: flex;*/
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        table {
+            width: 100%;
+            max-width: 500px; /* للعرض على الشاشات الكبيرة */
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 3px solid white; /* الأعمدة الداخلية بيضاء وسميكة */
+            width: 33.33%;
+            height: 150px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* إزالة الحدود الخارجية */
+        td:first-child, td:last-child {
+            border-left: none;
+            border-right: none;
+        }
+
+        tr:first-child td {
+            border-top: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+        #title{
+        	color: #0074FF;
+        	}
+        #bw{
+        	background-color : white;
+        	color: black;
+        	}
+        button{
+        	color: white;
+        background : black;
+        width:50%;
+        margin:1% 0px 0px 0px;
+        border-width:9px;
+        border-color:white;
+        	}
+        #mark{
+        	background-color : black;
+            color:#00FDFF;
+        	}
+        #m{
+        	background-color : black;
+            color:#0074FF;
+        	}
+        h6{
+            background-color : white;
+            color:black;
+        	}
+    </style>
+</head>
+<body>
+	<h1 id="title">player 1 round -> X</h1><br>
+<h1 id="sc"><mark id="bw">Score</mark> : <br> <mark id="m">player 1 : 0 </mark><br> <mark id="mark">player 2 : 0</mark></h1>
+<h6>tap on used/empty block to change player</h6>
+    <table id="table">
+        <tr>
+            <td><img src="p.png" id="cell1" onclick="photoChanger(changePlayer(),'cell1')"></td>
+            <td><img src="p.png" id="cell2" onclick="photoChanger(changePlayer(),'cell2')"></td>
+            <td><img src="p.png" id="cell3" onclick="photoChanger(changePlayer(),'cell3')"></td>
+        </tr>
+        <tr>
+            <td><img src="p.png" id="cell4" onclick="photoChanger(changePlayer(),'cell4')"></td>
+            <td><img src="p.png" id="cell5" onclick="photoChanger(changePlayer(),'cell5')"></td>
+            <td><img src="p.png" id="cell6" onclick="photoChanger(changePlayer(),'cell6')"></td>
+        </tr>
+        <tr>
+            <td><img src="p.png" id="cell7" onclick="photoChanger(changePlayer(),'cell7')"></td>
+            <td><img src="p.png" id="cell8" onclick="photoChanger(changePlayer(),'cell8')"></td>
+            <td><img src="p.png" id="cell9" onclick="photoChanger(changePlayer(),'cell9')"></td>
+        </tr>
+    </table>
+    <button onclick="reset()">Remove Score</button><button onclick="location.reload();">NewGame</button>
+
+    <script>
+    	let scoreH = document.getElementById("sc");
+    	let score = {p1 : 0 ,p2 : 0};
+        score.p1 = JSON.parse(localStorage.getItem('p1')) || 0;
+        score.p2 = JSON.parse(localStorage.getItem('p2')) || 0;
+    	let roundN = 1;
+        let title = document.getElementById("title");
+        let bord = {
+        	cell1 : 0,
+            cell2 : 0,
+            cell3 : 0,
+            cell4 : 0,
+            cell5 : 0,
+            cell6 : 0,
+            cell7 : 0,
+            cell8 : 0,
+            cell9 : 0,
+        	};
+        function photoChangerManager(photoId){
+        	if (!bord.cell1 && photoId === 'cell1'){
+        	return true;
+        	
+        	}else if (!bord.cell2 && photoId === 'cell2'){
+        	return true;
+        	
+        	}else if (!bord.cell3 && photoId === 'cell3'){
+        	return true;
+        	
+        	}else if (!bord.cell4 && photoId === 'cell4'){
+        	return true;
+        	
+        	}else if (!bord.cell5 && photoId === 'cell5'){
+        	return true;
+        	
+        	}else if (!bord.cell6 && photoId === 'cell6'){
+        	return true;
+        	
+        	}else if (!bord.cell7 && photoId === 'cell7'){
+        	return true;
+        	
+        	}else if (!bord.cell8 && photoId === 'cell8'){
+        	return true;
+        	
+        	}else if (!bord.cell9 && photoId === 'cell9'){
+        	return true;
+        	
+        	}else{
+        	return false;
+        	}
+        	}
+        function showScore(){
+        	scoreH.innerHTML = `<mark id="bw">Score :</mark><br> <mark id="m">player 1 : ${score.p1} </mark><br> <mark id="mark">player 2 : ${score.p2}</mark>`;
+        	}
+        showScore()
+        //player number Show and Return
+    	function changePlayer(){
+    	
+    	if (roundN === 1){
+    	title.textContent = 'player 2 round -> O'
+        title.style.color = '#00FDFF';
+        roundN--;
+    	return 1; // wich means "player 1"
+    	}else if (roundN === 0){
+    	title.textContent = 'player 1 round -> X'
+        title.style.color = '#0074FF';
+        roundN++;
+    	return 2;// ..."player 2"
+    	}
+    	}
+        //////////////////////////////from line 81//////////////////////////////
+        function photoChanger(playerNumber,photoId){
+        	let photoWillChange = document.getElementById(`${photoId}`);
+            console.log(photoWillChange);
+            if (playerNumber === 1 && photoChangerManager(photoId)){
+            	photoWillChange.src = "bx.jpg";     
+                bordChanger(playerNumber,photoId)
+            	}else if (playerNumber === 2 && photoChangerManager(photoId)) {
+            	photoWillChange.src = "bo.jpg";
+                bordChanger(playerNumber,photoId)
+                
+            	}
+        	}
+        function bordChanger(playerNumber,photoId){
+        	if (photoId ==='cell1'){
+        	bord.cell1 = playerNumber;
+        	}else if(photoId ==='cell2'){
+        	bord.cell2 = playerNumber;
+        	}else if(photoId ==='cell3'){
+        	bord.cell3 = playerNumber;
+        	}else if(photoId ==='cell4'){
+        	bord.cell4 = playerNumber;
+        	}else if(photoId ==='cell5'){
+        	bord.cell5 = playerNumber;
+        	}else if(photoId ==='cell6'){
+        	bord.cell6 = playerNumber;
+        	}else if(photoId ==='cell7'){
+        	bord.cell7 = playerNumber;
+        	}else if(photoId ==='cell8'){
+        	bord.cell8 = playerNumber;
+        	}else if(photoId ==='cell9'){
+        	bord.cell9 = playerNumber;
+        	}
+        if (gameJudj(playerNumber) === 1){
+        	
+        	alert('player 1 (X) is the winer');
+            score.p1++;
+            
+        	}else if (gameJudj(playerNumber) === 2){
+        	
+        	alert('player 2 (O) is the winer');
+            score.p2++;
+            
+        	}
+        localStorage.setItem('p1',JSON.stringify(score.p1));
+        localStorage.setItem('p2',JSON.stringify(score.p2));
+        showScore()
+        	}
+        function gameJudj(playerNumber){
+        	if (bord.cell1 === bord.cell2 && bord.cell2 === bord.cell3 && bord.cell1 !== 0
+|| bord.cell1 === bord.cell5 && bord.cell5 === bord.cell9 && bord.cell1 !== 0
+|| bord.cell1 === bord.cell4 && bord.cell4 === bord.cell7 && bord.cell1 !== 0
+|| bord.cell2 === bord.cell5 && bord.cell5 === bord.cell8 && bord.cell2 !== 0
+|| bord.cell4 === bord.cell5 && bord.cell5  === bord.cell6 && bord.cell4 !== 0
+|| bord.cell7 === bord.cell8 && bord.cell8 === bord.cell9 && bord.cell7 !== 0
+|| bord.cell3 === bord.cell5 && bord.cell5 === bord.cell7 && bord.cell3 !== 0
+|| bord.cell3 === bord.cell6 && bord.cell6  === bord.cell9 && bord.cell3 !== 0 ){
+        	return playerNumber;
+        	}
+        	}
+        function reset(){
+        	score = {
+    	p1 : 0,
+        p2 : 0
+        }
+        localStorage.setItem('p1',JSON.stringify(score.p1));
+        localStorage.setItem('p2',JSON.stringify(score.p2));
+        showScore()
+        }
+        
+         
+        </script>
+
+</body>
+</html>
