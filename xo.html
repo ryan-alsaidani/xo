@@ -5,81 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XO Game</title>
     <style>
+        /* إعدادات أساسية */
         body {
             margin: 0;
-            background: black;
-            /*display: flex;*/
-            justify-content: center;
+            padding: 0;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            justify-content: flex-start;
+            min-height: 100vh;
+            color: white;
+            padding-top: 20px;
+        }
+
+        h1, h6 {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        h6 {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        #title {
+            color: #0074FF;
+            font-size: 2rem;
+        }
+
+        #sc mark {
+            display: block;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        #bw {
+            background-color: white;
+            color: black;
+        }
+
+        #m {
+            background-color: #000;
+            color: #0074FF;
+        }
+
+        #mark {
+            background-color: #000;
+            color: #00FDFF;
         }
 
         table {
-            width: 100%;
-            max-width: 500px; /* للعرض على الشاشات الكبيرة */
             border-collapse: collapse;
+            width: 90%;
+            max-width: 500px;
+            margin: 20px 0;
         }
 
         td {
-            border: 3px solid white; /* الأعمدة الداخلية بيضاء وسميكة */
+            border: 3px solid white;
             width: 33.33%;
-            height: 150px;
+            height: 120px;
             text-align: center;
             vertical-align: middle;
-        }
-
-        /* إزالة الحدود الخارجية */
-        td:first-child, td:last-child {
-            border-left: none;
-            border-right: none;
-        }
-
-        tr:first-child td {
-            border-top: none;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
+            padding: 0;
         }
 
         img {
             width: 80%;
             height: 80%;
             object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.1s ease;
         }
-        #title{
-        	color: #0074FF;
-        	}
-        #bw{
-        	background-color : white;
-        	color: black;
-        	}
-        button{
-        	color: white;
-        background : black;
-        width:50%;
-        margin:1% 0px 0px 0px;
-        border-width:9px;
-        border-color:white;
-        	}
-        #mark{
-        	background-color : black;
-            color:#00FDFF;
-        	}
-        #m{
-        	background-color : black;
-            color:#0074FF;
-        	}
-        h6{
-            background-color : white;
-            color:black;
-        	}
+
+        img:hover {
+            transform: scale(1.05);
+        }
+
+        button {
+            color: white;
+            background-color: black;
+            border: 3px solid white;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 10px 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        @media (max-width: 500px) {
+            td {
+                height: 100px;
+            }
+
+            img {
+                width: 70%;
+                height: 70%;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+        }
     </style>
 </head>
 <body>
-	<h1 id="title">player 1 round -> X</h1><br>
-<h1 id="sc"><mark id="bw">Score</mark> : <br> <mark id="m">player 1 : 0 </mark><br> <mark id="mark">player 2 : 0</mark></h1>
-<h6>tap on used/empty block to change player</h6>
+    <h1 id="title">Player 1 round -> X</h1>
+
+    <h1 id="sc">
+        <mark id="bw">Score</mark>
+        <mark id="m">Player 1: 0</mark>
+        <mark id="mark">Player 2: 0</mark>
+    </h1>
+
+    <h6>Tap on any block to play</h6>
+
     <table id="table">
         <tr>
             <td><img src="p.png" id="cell1" onclick="photoChanger(changePlayer(),'cell1')"></td>
@@ -97,149 +152,100 @@
             <td><img src="p.png" id="cell9" onclick="photoChanger(changePlayer(),'cell9')"></td>
         </tr>
     </table>
-    <button onclick="reset()">Remove Score</button><button onclick="location.reload();">NewGame</button>
+
+    <div>
+        <button onclick="reset()">Remove Score</button>
+        <button onclick="location.reload();">New Game</button>
+    </div>
 
     <script>
-    	let scoreH = document.getElementById("sc");
-    	let score = {p1 : 0 ,p2 : 0};
+        // الكود نفسه بدون تغيير
+        let scoreH = document.getElementById("sc");
+        let score = {p1: 0, p2: 0};
         score.p1 = JSON.parse(localStorage.getItem('p1')) || 0;
         score.p2 = JSON.parse(localStorage.getItem('p2')) || 0;
-    	let roundN = 1;
+
+        let roundN = 1;
         let title = document.getElementById("title");
         let bord = {
-        	cell1 : 0,
-            cell2 : 0,
-            cell3 : 0,
-            cell4 : 0,
-            cell5 : 0,
-            cell6 : 0,
-            cell7 : 0,
-            cell8 : 0,
-            cell9 : 0,
-        	};
-        function photoChangerManager(photoId){
-        	if (!bord.cell1 && photoId === 'cell1'){
-        	return true;
-        	
-        	}else if (!bord.cell2 && photoId === 'cell2'){
-        	return true;
-        	
-        	}else if (!bord.cell3 && photoId === 'cell3'){
-        	return true;
-        	
-        	}else if (!bord.cell4 && photoId === 'cell4'){
-        	return true;
-        	
-        	}else if (!bord.cell5 && photoId === 'cell5'){
-        	return true;
-        	
-        	}else if (!bord.cell6 && photoId === 'cell6'){
-        	return true;
-        	
-        	}else if (!bord.cell7 && photoId === 'cell7'){
-        	return true;
-        	
-        	}else if (!bord.cell8 && photoId === 'cell8'){
-        	return true;
-        	
-        	}else if (!bord.cell9 && photoId === 'cell9'){
-        	return true;
-        	
-        	}else{
-        	return false;
-        	}
-        	}
-        function showScore(){
-        	scoreH.innerHTML = `<mark id="bw">Score :</mark><br> <mark id="m">player 1 : ${score.p1} </mark><br> <mark id="mark">player 2 : ${score.p2}</mark>`;
-        	}
-        showScore()
-        //player number Show and Return
-    	function changePlayer(){
-    	
-    	if (roundN === 1){
-    	title.textContent = 'player 2 round -> O'
-        title.style.color = '#00FDFF';
-        roundN--;
-    	return 1; // wich means "player 1"
-    	}else if (roundN === 0){
-    	title.textContent = 'player 1 round -> X'
-        title.style.color = '#0074FF';
-        roundN++;
-    	return 2;// ..."player 2"
-    	}
-    	}
-        //////////////////////////////from line 81//////////////////////////////
-        function photoChanger(playerNumber,photoId){
-        	let photoWillChange = document.getElementById(`${photoId}`);
-            console.log(photoWillChange);
-            if (playerNumber === 1 && photoChangerManager(photoId)){
-            	photoWillChange.src = "bx.jpg";     
-                bordChanger(playerNumber,photoId)
-            	}else if (playerNumber === 2 && photoChangerManager(photoId)) {
-            	photoWillChange.src = "bo.jpg";
-                bordChanger(playerNumber,photoId)
-                
-            	}
-        	}
-        function bordChanger(playerNumber,photoId){
-        	if (photoId ==='cell1'){
-        	bord.cell1 = playerNumber;
-        	}else if(photoId ==='cell2'){
-        	bord.cell2 = playerNumber;
-        	}else if(photoId ==='cell3'){
-        	bord.cell3 = playerNumber;
-        	}else if(photoId ==='cell4'){
-        	bord.cell4 = playerNumber;
-        	}else if(photoId ==='cell5'){
-        	bord.cell5 = playerNumber;
-        	}else if(photoId ==='cell6'){
-        	bord.cell6 = playerNumber;
-        	}else if(photoId ==='cell7'){
-        	bord.cell7 = playerNumber;
-        	}else if(photoId ==='cell8'){
-        	bord.cell8 = playerNumber;
-        	}else if(photoId ==='cell9'){
-        	bord.cell9 = playerNumber;
-        	}
-        if (gameJudj(playerNumber) === 1){
-        	
-        	alert('player 1 (X) is the winer');
-            score.p1++;
-            
-        	}else if (gameJudj(playerNumber) === 2){
-        	
-        	alert('player 2 (O) is the winer');
-            score.p2++;
-            
-        	}
-        localStorage.setItem('p1',JSON.stringify(score.p1));
-        localStorage.setItem('p2',JSON.stringify(score.p2));
-        showScore()
-        	}
-        function gameJudj(playerNumber){
-        	if (bord.cell1 === bord.cell2 && bord.cell2 === bord.cell3 && bord.cell1 !== 0
-|| bord.cell1 === bord.cell5 && bord.cell5 === bord.cell9 && bord.cell1 !== 0
-|| bord.cell1 === bord.cell4 && bord.cell4 === bord.cell7 && bord.cell1 !== 0
-|| bord.cell2 === bord.cell5 && bord.cell5 === bord.cell8 && bord.cell2 !== 0
-|| bord.cell4 === bord.cell5 && bord.cell5  === bord.cell6 && bord.cell4 !== 0
-|| bord.cell7 === bord.cell8 && bord.cell8 === bord.cell9 && bord.cell7 !== 0
-|| bord.cell3 === bord.cell5 && bord.cell5 === bord.cell7 && bord.cell3 !== 0
-|| bord.cell3 === bord.cell6 && bord.cell6  === bord.cell9 && bord.cell3 !== 0 ){
-        	return playerNumber;
-        	}
-        	}
-        function reset(){
-        	score = {
-    	p1 : 0,
-        p2 : 0
-        }
-        localStorage.setItem('p1',JSON.stringify(score.p1));
-        localStorage.setItem('p2',JSON.stringify(score.p2));
-        showScore()
-        }
-        
-         
-        </script>
+            cell1: 0, cell2: 0, cell3: 0,
+            cell4: 0, cell5: 0, cell6: 0,
+            cell7: 0, cell8: 0, cell9: 0
+        };
 
+        function photoChangerManager(photoId) {
+            return !bord[photoId];
+        }
+
+        function showScore() {
+            scoreH.innerHTML = `<mark id="bw">Score :</mark>
+                                <mark id="m">Player 1: ${score.p1}</mark>
+                                <mark id="mark">Player 2: ${score.p2}</mark>`;
+        }
+        showScore();
+
+        function changePlayer() {
+            if (roundN === 1) {
+                title.textContent = 'Player 2 round -> O';
+                title.style.color = '#00FDFF';
+                roundN--;
+                return 1;
+            } else {
+                title.textContent = 'Player 1 round -> X';
+                title.style.color = '#0074FF';
+                roundN++;
+                return 2;
+            }
+        }
+
+        function photoChanger(playerNumber, photoId) {
+            let photoWillChange = document.getElementById(photoId);
+            if (playerNumber === 1 && photoChangerManager(photoId)) {
+                photoWillChange.src = "bx.jpg";
+                bordChanger(playerNumber, photoId);
+            } else if (playerNumber === 2 && photoChangerManager(photoId)) {
+                photoWillChange.src = "bo.jpg";
+                bordChanger(playerNumber, photoId);
+            }
+        }
+
+        function bordChanger(playerNumber, photoId) {
+            bord[photoId] = playerNumber;
+            let winner = gameJudj(playerNumber);
+            if (winner === 1) {
+                alert('Player 1 (X) wins!');
+                score.p1++;
+            } else if (winner === 2) {
+                alert('Player 2 (O) wins!');
+                score.p2++;
+            }
+            localStorage.setItem('p1', JSON.stringify(score.p1));
+            localStorage.setItem('p2', JSON.stringify(score.p2));
+            showScore();
+        }
+
+        function gameJudj(playerNumber) {
+            const b = bord;
+            if (
+                (b.cell1 && b.cell1 === b.cell2 && b.cell2 === b.cell3) ||
+                (b.cell4 && b.cell4 === b.cell5 && b.cell5 === b.cell6) ||
+                (b.cell7 && b.cell7 === b.cell8 && b.cell8 === b.cell9) ||
+                (b.cell1 && b.cell1 === b.cell4 && b.cell4 === b.cell7) ||
+                (b.cell2 && b.cell2 === b.cell5 && b.cell5 === b.cell8) ||
+                (b.cell3 && b.cell3 === b.cell6 && b.cell6 === b.cell9) ||
+                (b.cell1 && b.cell1 === b.cell5 && b.cell5 === b.cell9) ||
+                (b.cell3 && b.cell3 === b.cell5 && b.cell5 === b.cell7)
+            ) {
+                return playerNumber;
+            }
+        }
+
+        function reset() {
+            score = {p1: 0, p2: 0};
+            localStorage.setItem('p1', JSON.stringify(score.p1));
+            localStorage.setItem('p2', JSON.stringify(score.p2));
+            showScore();
+        }
+    </script>
 </body>
 </html>
